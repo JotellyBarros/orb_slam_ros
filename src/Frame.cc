@@ -55,6 +55,8 @@ Frame::Frame(const Frame &frame)
 
     if(!frame.mTcw.empty())
         SetPose(frame.mTcw);
+
+        std::cout << "59 Pose frame.mTcw m:\n" << frame.mTcw << std::endl;
 }
 
 
@@ -259,6 +261,7 @@ void Frame::ExtractORB(int flag, const cv::Mat &im)
 
 void Frame::SetPose(cv::Mat Tcw)
 {
+    std::cout << "264 Pose Frame.Tcw m:\n" << Tcw << std::endl;
     mTcw = Tcw.clone();
     UpdatePoseMatrices();
 }

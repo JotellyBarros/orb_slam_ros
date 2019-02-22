@@ -94,7 +94,7 @@ Tracking::Tracking(System *pSys, ORBVocabulary* pVoc, FrameDrawer *pFrameDrawer,
     cout << "- k1: " << DistCoef.at<float>(0) << endl;
     cout << "- k2: " << DistCoef.at<float>(1) << endl;
     if(DistCoef.rows==5)
-        cout << "- k3: " << DistCoef.at<float>(4) << endl;
+    cout << "- k3: " << DistCoef.at<float>(4) << endl;
     cout << "- p1: " << DistCoef.at<float>(2) << endl;
     cout << "- p2: " << DistCoef.at<float>(3) << endl;
     cout << "- fps: " << fps << endl;
@@ -435,6 +435,7 @@ void Tracking::Track()
             else
                 mVelocity = cv::Mat();
 
+            std::cout << "mCurrentFrame.mTcw m:\n" << mCurrentFrame.mTcw << std::endl;
             mpMapDrawer->SetCurrentCameraPose(mCurrentFrame.mTcw);
 	    mpSlamDataPub->SetCurrentCameraPose(mCurrentFrame.mTcw);
 	    
@@ -560,7 +561,7 @@ void Tracking::StereoInitialization()
         mpMap->mvpKeyFrameOrigins.push_back(pKFini);
 
         mpMapDrawer->SetCurrentCameraPose(mCurrentFrame.mTcw);
-
+        std::cout << "564 Pose mCurrentFrame.mTcw m:\n" << mCurrentFrame.mTcw << std::endl;
         mState=OK;
     }
 }

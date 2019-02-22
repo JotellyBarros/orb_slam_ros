@@ -494,7 +494,7 @@ void System::GetCurrentTrajectory(vector<cv::Mat> &currentTrajectory)
         ORB_SLAM2::KeyFrame* pKF = *lRit;
 
         cv::Mat Trw = cv::Mat::eye(4,4,CV_32F);
-
+        // std::cout << "497 Pose Trw m:\n" << Trw << std::endl;
         while(pKF->isBad())
         {
           //  cout << "bad parent" << endl;
@@ -503,13 +503,20 @@ void System::GetCurrentTrajectory(vector<cv::Mat> &currentTrajectory)
         }
 
         //Trw = Trw*pKF->GetPose()*Two;  // keep the first frame on the origin
-	Trw = Trw*pKF->GetPose();
-
+	    //std::cout << "507 Pose Trw m:\n" << Trw << std::endl;
+        //std::cout << "508 Pose pKF m:\n" << pKF << std::endl;
+        Trw = Trw*pKF->GetPose();
+        
+        //std::cout << "509 Pose Trw m:\n" << Trw << std::endl;
         cv::Mat Tcw = (*lit)*Trw;
         cv::Mat Rwc = Tcw.rowRange(0,3).colRange(0,3).t();
         cv::Mat twc = -Rwc*Tcw.rowRange(0,3).col(3);
 
-	currentTrajectory.push_back(Tcw.inv());
+        // std::cout << "514 Pose (*lit) m:\n" << (*lit) << std::endl;
+        // std::cout << "515 Pose Trw m:\n" << Trw << std::endl;
+        // std::cout << "516 Pose Tcw m:\n" << Tcw << std::endl;
+        // std::cout << "517 Pose Tcw.inv() m:\n" << Tcw.inv() << std::endl;
+	    currentTrajectory.push_back(Tcw.inv());
     }
 }
 

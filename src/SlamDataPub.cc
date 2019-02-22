@@ -39,19 +39,23 @@ SlamDataPub::SlamDataPub(System* pSystem, FrameDrawer *pFrameDrawer, MapDrawer *
     }
     
     // camera under ground      
-    mInitCam2Ground_R << 1,0,0,0,0,1,0,-1,0;  // camera coordinate represented in ground coordinate system
-    mInitCam2Ground_t.setZero();     
+    //mInitCam2Ground_R << 1,0,0,0,0,1,0,-1,0; -90 // camera coordinate represented in ground coordinate system
+	// mInitCam2Ground_R << 0,0,1, 1,0,0, 0,1,0; Y-  X+
+    mInitCam2Ground_R << 0,0,1, 0,1,0, -1,0,0;
+	mInitCam2Ground_t.setZero();     
     mTrans_cam2ground.setIdentity();   // Set to Identity to make bottom row of Matrix 0,0,0,1
     mTrans_cam2ground.block<3,3>(0,0) = mInitCam2Ground_R;
     mTrans_cam2ground.block<3,1>(0,3) = mInitCam2Ground_t;  //< block_rows, block_cols >(pos_row, pos_col)
 
     // camera under vehicle, 
-    mCam2Vehicle_R << 0,0,1,-1,0,0,0,-1,0;  // camera coordinate represented in vehicle coordinate system
+    //mCam2Vehicle_R << 0,0,1,-1,0,0,0,-1,0; -90  90 // camera coordinate represented in vehicle coordinate system
+	// mCam2Vehicle_R   <<  0,0,-1, 1,0,0, 0,-1,0; OK
+	mCam2Vehicle_R   <<  0,0,1, 0,1,0, -1,0,0;
+
     mCam2Vehicle_t.setZero();
     mTrans_cam2vehicle.setIdentity();   // Set to Identity to make bottom row of Matrix 0,0,0,1
     mTrans_cam2vehicle.block<3,3>(0,0) = mCam2Vehicle_R;
     mTrans_cam2vehicle.block<3,1>(0,3) = mCam2Vehicle_t;  //< block_rows, block_cols >(pos_row, pos_col)
-
     
 }
 
@@ -225,43 +229,49 @@ void SlamDataPub::Release()
 
 void SlamDataPub::SetCurrentCameraPose(const cv::Mat &Tcw)
 {
+	std::cout << "Pose Tcw m:\n" << Tcw << std::endl;
     unique_lock<mutex> lock(mMutexCamera);
     mCameraPose = Tcw.clone();
     mbGetNewCamPose = true;
 }
 
+
 void SlamDataPub::GetCurrentROSCameraMatrix(geometry_msgs::PoseStamped &cam_pose)
 {
       if(!mCameraPose.empty())
       {
-	  Eigen::Matrix4f cam_pose2firstcam;
- 	  Eigen::Matrix4f cam_pose2ground;
- 	  {
-	      unique_lock<mutex> lock(mMutexCamera);
-	      cv2eigen(mCameraPose.inv(),cam_pose2firstcam);
-	      cam_pose2ground = mTrans_cam2ground * cam_pose2firstcam;
-	      {
-		  mCam2GroundNow_T = cam_pose2ground;
-	      }
-	  }
+		Eigen::Matrix4f cam_pose2firstcam;
+		Eigen::Matrix4f cam_pose2ground;
+		{
+			unique_lock<mutex> lock(mMutexCamera);
+			cv2eigen(mCameraPose.inv(),cam_pose2firstcam);
+			cam_pose2ground = mTrans_cam2ground * cam_pose2firstcam;
 
- 	  cam_pose.pose.position.x = cam_pose2ground(0,3);
-	  cam_pose.pose.position.y  = cam_pose2ground(1,3);
-	  cam_pose.pose.position.z  = cam_pose2ground(2,3);
-	   
-	  Eigen::Matrix3f Rwc = cam_pose2ground.block<3,3>(0,0);
-	  Eigen::Quaternionf q(Rwc);
-	  cam_pose.pose.orientation.x = q.x();
-	  cam_pose.pose.orientation.y = q.y();
-	  cam_pose.pose.orientation.z = q.z();
-	  cam_pose.pose.orientation.w = q.w();
-	  
-	  cam_pose.header.frame_id = "ground";
-	  cam_pose.header.stamp = ros::Time::now();  
-	  
-	  mbGetNewCamPose = false;
-      }
-      
+			// std::cout << std::endl << "GetCurrentROSCameraMatrix" << std::endl;
+			// std::cout << "Matrix mTrans_cam2ground m:\n" << mTrans_cam2ground << std::endl;
+			// std::cout << "Matrix cam_pose2firstcam m:\n" << cam_pose2firstcam << std::endl;
+
+			{
+				mCam2GroundNow_T = cam_pose2ground;
+			}
+		}
+
+		cam_pose.pose.position.x = cam_pose2ground(0,3);
+		cam_pose.pose.position.y  = cam_pose2ground(1,3);
+		cam_pose.pose.position.z  = cam_pose2ground(2,3);
+
+		Eigen::Matrix3f Rwc = cam_pose2ground.block<3,3>(0,0);
+		Eigen::Quaternionf q(Rwc);
+		cam_pose.pose.orientation.x = q.x();
+		cam_pose.pose.orientation.y = q.y();
+		cam_pose.pose.orientation.z = q.z();
+		cam_pose.pose.orientation.w = q.w();
+		
+		cam_pose.header.frame_id = "ground";
+		cam_pose.header.stamp = ros::Time::now();  
+		
+		mbGetNewCamPose = false;
+      }      
 }
 
 void SlamDataPub::GetCurrentROSVehicleMatrix(geometry_msgs::PoseStamped &vehicle_pose)
@@ -278,7 +288,7 @@ void SlamDataPub::GetCurrentROSVehicleMatrix(geometry_msgs::PoseStamped &vehicle
 	vehicle_pose.pose.position.x = vehicle_pose2ground(0,3);
 	vehicle_pose.pose.position.y  = vehicle_pose2ground(1,3);
 	vehicle_pose.pose.position.z  = vehicle_pose2ground(2,3);
-	  
+
 	Eigen::Matrix3f Rwc = vehicle_pose2ground.block<3,3>(0,0);
 	Eigen::Quaternionf q(Rwc);
 	vehicle_pose.pose.orientation.x = q.x();
@@ -313,9 +323,16 @@ void SlamDataPub::GetCurrentROSTrajectories(nav_msgs::Path &cam_path, nav_msgs::
 	      Eigen::Matrix4f cam_pose2ground = mTrans_cam2ground * cam_pose_temp;
 	      Eigen::Matrix4f vehicle_pose2ground = cam_pose2ground * mTrans_cam2vehicle.inverse();
 	      
+		//   std::cout << "\n------------------------------\n" << std::endl;
+		//   std::cout << "328 Pose mTrans_cam2ground m:\n" << mTrans_cam2ground << std::endl;
+		//   std::cout << "329 Pose cam_pose_temp m:\n" << cam_pose_temp << std::endl;
+		//   std::cout << "330 Pose mTrans_cam2vehicle.inverse() m:\n" << mTrans_cam2vehicle.inverse() << std::endl;
+		//   std::cout << "\n------------------------------\n" << std::endl;
+
 	      cam_pose.pose.position.x = cam_pose2ground(0,3);
 	      cam_pose.pose.position.y = cam_pose2ground(1,3);
 	      cam_pose.pose.position.z = cam_pose2ground(2,3);
+
 	      Eigen::Matrix3f Rwc = cam_pose2ground.block<3,3>(0,0);
 	      Eigen::Quaternionf q(Rwc);	      
 	      cam_pose.pose.orientation.x = q.x();

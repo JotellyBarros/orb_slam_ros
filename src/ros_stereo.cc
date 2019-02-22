@@ -178,17 +178,14 @@ void ImageGrabber::GrabStereo(const sensor_msgs::ImageConstPtr& msgLeft,const se
     }
     else
     {
+
         cv::Mat cameraPose = mpSLAM->TrackStereo(cv_ptrLeft->image,cv_ptrRight->image,cv_ptrLeft->header.stamp.toSec());
 
-	std::chrono::steady_clock::time_point t3 = std::chrono::steady_clock::now();
-	double ttrack= std::chrono::duration_cast<std::chrono::duration<double> >(t3 - t2).count();
-	//double tall= std::chrono::duration_cast<std::chrono::duration<double> >(t3 - t1).count();
-
-	cout << "Image reading time = " << timread << "s, freqency = " << 1/timread << "Hz" << endl;
-	cout << "Tracking time = " << ttrack << "s, freqency = " << 1/ttrack << "Hz" << endl; 	
-	//cout << "ALL cost time = " << tall << "s, freqency = " << 1/tall << "Hz" << endl; 
-    }
-
+        std::chrono::steady_clock::time_point t3 = std::chrono::steady_clock::now();
+        double ttrack= std::chrono::duration_cast<std::chrono::duration<double> >(t3 - t2).count();
+        //double tall= std::chrono::duration_cast<std::chrono::duration<double> >(t3 - t1).count();
+        
+        //cout << "Image reading time = " << timread << "s, freqency = " << 1/timread << "Hz" << endl;
+        //cout << "Tracking time = " << ttrack << "s, freqency = " << 1/ttrack << "Hz" << endl; 	
+    }    
 }
-
-
