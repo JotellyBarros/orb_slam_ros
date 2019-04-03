@@ -140,7 +140,7 @@ void ImageGrabber::GrabStereo(const sensor_msgs::ImageConstPtr& msgLeft,const se
 {
     tt2 = std::chrono::steady_clock::now();
     double t_round= std::chrono::duration_cast<std::chrono::duration<double> >(tt2 - tt1).count();
-    cout << "Round time cost = " <<  t_round  << "s,  freqency = " << 1/t_round << "Hz\n" << endl;
+    // cout << "Round time cost = " <<  t_round  << "s,  freqency = " << 1/t_round << "Hz\n" << endl;
     tt1 = tt2;
     
     std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();

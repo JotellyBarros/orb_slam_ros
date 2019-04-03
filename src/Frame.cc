@@ -56,7 +56,7 @@ Frame::Frame(const Frame &frame)
     if(!frame.mTcw.empty())
         SetPose(frame.mTcw);
 
-        std::cout << "59 Pose frame.mTcw m:\n" << frame.mTcw << std::endl;
+        // std::cout << "59 Pose frame.mTcw m:\n" << frame.mTcw << std::endl;
 }
 
 
@@ -85,7 +85,7 @@ Frame::Frame(const cv::Mat &imLeft, const cv::Mat &imRight, const double &timeSt
 
     std::chrono::steady_clock::time_point t_ext2 = std::chrono::steady_clock::now();
     double t_extract= std::chrono::duration_cast<std::chrono::duration<double> >(t_ext2 - t_ext1).count();
-    cout << "t_extract = " << t_extract << "s, frequence = " << 1/t_extract << "Hz"  << endl;
+    // cout << "t_extract = " << t_extract << "s, frequence = " << 1/t_extract << "Hz"  << endl;
     
     N = mvKeys.size();
 
@@ -261,7 +261,7 @@ void Frame::ExtractORB(int flag, const cv::Mat &im)
 
 void Frame::SetPose(cv::Mat Tcw)
 {
-    std::cout << "264 Pose Frame.Tcw m:\n" << Tcw << std::endl;
+    // std::cout << "264 Pose Frame.Tcw m:\n" << Tcw << std::endl;
     mTcw = Tcw.clone();
     UpdatePoseMatrices();
 }

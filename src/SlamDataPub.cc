@@ -210,7 +210,7 @@ void SlamDataPub::Release() {
 }
 
 void SlamDataPub::SetCurrentCameraPose(const cv::Mat &Tcw) {
-  std::cout << "Pose Tcw m:\n" << Tcw << std::endl;
+  // std::cout << "Pose Tcw m:\n" << Tcw << std::endl;
   unique_lock<mutex> lock(mMutexCamera);
   mCameraPose = Tcw.clone();
   mbGetNewCamPose = true;

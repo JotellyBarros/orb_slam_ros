@@ -435,7 +435,7 @@ void Tracking::Track()
             else
                 mVelocity = cv::Mat();
 
-            std::cout << "mCurrentFrame.mTcw m:\n" << mCurrentFrame.mTcw << std::endl;
+            // std::cout << "mCurrentFrame.mTcw m:\n" << mCurrentFrame.mTcw << std::endl;
             mpMapDrawer->SetCurrentCameraPose(mCurrentFrame.mTcw);
 	    mpSlamDataPub->SetCurrentCameraPose(mCurrentFrame.mTcw);
 	    
@@ -561,7 +561,7 @@ void Tracking::StereoInitialization()
         mpMap->mvpKeyFrameOrigins.push_back(pKFini);
 
         mpMapDrawer->SetCurrentCameraPose(mCurrentFrame.mTcw);
-        std::cout << "564 Pose mCurrentFrame.mTcw m:\n" << mCurrentFrame.mTcw << std::endl;
+        // std::cout << "564 Pose mCurrentFrame.mTcw m:\n" << mCurrentFrame.mTcw << std::endl;
         mState=OK;
     }
 }

@@ -1,5 +1,6 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5.0)
 project(orb_slam_ros)
+
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
@@ -12,7 +13,6 @@ find_package(catkin REQUIRED COMPONENTS
   pcl_ros
 )
 
-#FIND_PACKAGE( PCL REQUIRED COMPONENTS common io visualization filters )
 FIND_PACKAGE( PCL REQUIRED)
 
 # PCL
@@ -46,8 +46,6 @@ else()
    message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 endif()
 
-LIST(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules)
-
 find_package(OpenCV 3.0 QUIET)
 if(NOT OpenCV_FOUND)
    find_package(OpenCV 2.4.3 QUIET)
@@ -56,11 +54,13 @@ if(NOT OpenCV_FOUND)
    endif()
 endif()
 
+
+LIST(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules)
+FIND_PACKAGE(G2O REQUIRED)
 find_package(Eigen3 3.1.0 REQUIRED)
 find_package(Pangolin REQUIRED)
-
-# LIST(APPEND CMAKE_MODULE_PATH ${CMAKE_INSTALL_PREFIX}/lib/cmake/g2o)
-# FIND_PACKAGE(G2O REQUIRED)
+FIND_PACKAGE(DBoW2 REQUIRED)
+FIND_PACKAGE(DLib REQUIRED)
 
 catkin_package(
 #  INCLUDE_DIRS include
@@ -69,48 +69,20 @@ catkin_package(
 #  DEPENDS system_lib
 )
 
-include_directories(
+
+include_directories(AFTER SYSTEM 
+  ${G2O_INCLUDE_DIR}
   ${catkin_INCLUDE_DIRS}
 )
-
-# link_directories(${CATKIN_PACKAGE_LIB_DESTINATION})
 
 include_directories(
 ${PROJECT_SOURCE_DIR}
 ${PROJECT_SOURCE_DIR}/include
 ${EIGEN3_INCLUDE_DIR}
 ${Pangolin_INCLUDE_DIRS}
+${G2O_INCLUDE_DIR}
 )
 
-# set(GO2_LIBS ${CMAKE_INSTALL_PREFIX}/lib/libg2o_cli.so
-# ${CMAKE_INSTALL_PREFIX}/lib/libg2o_core.so
-# ${CMAKE_INSTALL_PREFIX}/lib/libg2o_csparse_extension.so
-# ${CMAKE_INSTALL_PREFIX}/lib/libg2o_ext_csparse.so
-# ${CMAKE_INSTALL_PREFIX}/lib/libg2o_ext_freeglut_minimal.so
-# ${CMAKE_INSTALL_PREFIX}/lib/libg2o_hierarchical.so
-# ${CMAKE_INSTALL_PREFIX}/lib/libg2o_interface.so
-# ${CMAKE_INSTALL_PREFIX}/lib/libg2o_opengl_helper.so
-# libg2o_parser.so
-# libg2o_simulator.so
-# libg2o_solver_csparse.so
-# libg2o_solver_dense.so
-# libg2o_solver_eigen.so
-# libg2o_solver_pcg.so
-# libg2o_solver_slam2d_linear.so
-# libg2o_solver_structure_only.so
-# libg2o_stuff.so
-# libg2o_types_data.so
-# libg2o_types_icp.so
-# libg2o_types_sba.so
-# libg2o_types_sclam2d.so
-# libg2o_types_sim3.so
-# libg2o_types_slam2d.so
-# libg2o_types_slam2d_addons.so
-# libg2o_types_slam3d.so
-# libg2o_types_slam3d_addons.so
-# )
-
-# message(FATAL_ERROR "Files are ${G2O_CORE_LIBRARY}" )
 
 # Stereo
 add_executable(stereo_node_KITTI 
@@ -141,16 +113,16 @@ ${catkin_LIBRARIES}
 ${OpenCV_LIBS}
 ${EIGEN3_LIBS}
 ${Pangolin_LIBRARIES}
-# ${G2O_CORE_LIBRARY}
-# ${G2O_STUFF_LIBRARY}
+${G2O_CORE_LIBRARY}
+${G2O_STUFF_LIBRARY}
+${G2O_TYPES_SBA}
+${G2O_TYPES_SIM3}
 ${CMAKE_INSTALL_PREFIX}/lib/libDBoW2.so
-${CMAKE_INSTALL_PREFIX}/lib/libg2o.so
-# /home/docker/visual_odometry_tests/dev/install/lib/libg2o_core.so
-# ${PROJECT_SOURCE_DIR}/Thirdparty/DBoW2/lib/libDBoW2.so
-# ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o.so
+${CMAKE_INSTALL_PREFIX}/lib/libDLib.so
 ${PCL_LIBRARIES}
 )
 
+get_property(the_include_dirs TARGET stereo_node_KITTI PROPERTY INCLUDE_DIRECTORIES)
 
 # Mono
 add_executable(mono_node_KITTI 
@@ -183,8 +155,10 @@ ${EIGEN3_LIBS}
 ${Pangolin_LIBRARIES}
 ${G2O_CORE_LIBRARY}
 ${G2O_STUFF_LIBRARY}
+${G2O_TYPES_SBA}
+${G2O_TYPES_SIM3}
 ${CMAKE_INSTALL_PREFIX}/lib/libDBoW2.so
-${CMAKE_INSTALL_PREFIX}/lib/libg2o.so
+${CMAKE_INSTALL_PREFIX}/lib/libDLib.so
 ${helloworld_SRC}
 ${PCL_LIBRARIES}
 )
