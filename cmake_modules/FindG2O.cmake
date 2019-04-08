@@ -1,7 +1,7 @@
 # Find the header files
 
-find_path(G2O_INCLUDE_DIR core/base_vertex.h
-    ${CMAKE_INSTALL_PREFIX}/include/g2o
+find_path(G2O_INCLUDE_DIR g2o/core/base_vertex.h
+    ${CMAKE_INSTALL_PREFIX}/include
     ${G2O_ROOT}/include
     $ENV{G2O_ROOT}/include
     $ENV{G2O_ROOT}
