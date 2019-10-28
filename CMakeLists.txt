@@ -11,6 +11,9 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   pcl_conversions
   pcl_ros
+  nav_msgs
+  geometry_msgs
+  tf
 )
 
 FIND_PACKAGE( PCL REQUIRED)
