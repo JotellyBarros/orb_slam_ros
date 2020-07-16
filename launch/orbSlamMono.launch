@@ -1,6 +1,6 @@
 <launch>
     <!-- load the orb_slam_ros -->
-    <node name="orb_slam_ros" pkg="orb_slam_ros" type="mono_node_KITTI" args="$(find orb_slam_ros)/config/Asus.yaml $(find orb_slam_ros)/Vocabulary/ORBvoc.bin" output="screen">
+    <node name="orb_slam_ros" pkg="orb_slam_ros" type="mono_node_KITTI" args="$(find orb_slam_ros)/config/zenfone4_mono.yaml $(find orb_slam_ros)/Vocabulary/ORBvoc.bin" output="screen">
         <remap from="/camera/image_raw" to="/camera/image_raw" />
 
         <param name="publish_pointcloud" type="bool" value="true" />
@@ -8,7 +8,7 @@
         <param name="reset_map" type="bool" value="true" />
         <param name="pointcloud_frame_id" type="string" value="map" />
         <param name="camera_frame_id" type="string" value="cameras" />
-        <param name="min_num_kf_in_map" type="int" value="3" />
+        <param name="min_num_kf_in_map" type="int" value="5" />
     </node>
 
     <!-- load the rqt_console -->
