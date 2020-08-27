@@ -31,7 +31,7 @@ ThDepth: 30.0
 #--------------------------------------------------------------------------------------------
 
 # ORB Extractor: Number of features per image
-ORBextractor.nFeatures: 3000
+ORBextractor.nFeatures: 3200
 
 # ORB Extractor: Scale factor between levels in the scale pyramid 	
 ORBextractor.scaleFactor: 1.2
@@ -43,8 +43,8 @@ ORBextractor.nLevels: 8
 # Image is divided in a grid. At each cell FAST are extracted imposing a minimum response.
 # Firstly we impose iniThFAST. If no corners are detected we impose a lower value minThFAST
 # You can lower these values if your images have low contrast			
-ORBextractor.iniThFAST: 15
-ORBextractor.minThFAST: 5
+ORBextractor.iniThFAST: 16
+ORBextractor.minThFAST: 6
 
 #--------------------------------------------------------------------------------------------
 # Viewer Parameters
@@ -58,4 +58,4 @@ Viewer.CameraLineWidth: 3
 Viewer.ViewpointX: 0
 Viewer.ViewpointY: -0.7
 Viewer.ViewpointZ: -1.8
-Viewer.ViewpointF: 300
+Viewer.ViewpointF: 500
