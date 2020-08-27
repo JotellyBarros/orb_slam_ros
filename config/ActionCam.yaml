@@ -4,15 +4,15 @@
 # Camera Parameters. Adjust them!
 # ActionCam Calibration 848 x 480
 #--------------------------------------------------------------------------------------------
-Camera.fx: 552.941274
-Camera.cx: 373.239618
-Camera.fy: 553.538302
-Camera.cy: 225.581316
+Camera.fx: 559.960380
+Camera.cx: 404.268760
+Camera.fy: 559.269657
+Camera.cy: 226.036719
 
-Camera.k1: -0.335135
-Camera.k2: 0.142163
-Camera.p1: 0.000315
-Camera.p2: 0.002872 
+Camera.k1: -0.316609
+Camera.k2: 0.105876
+Camera.p1: 0.000311
+Camera.p2: 0.000929
 
 Camera.width: 848
 Camera.height: 480
@@ -24,7 +24,7 @@ Camera.fps: 30.0
 Camera.RGB: 1
 
 # Close/Far threshold. Baseline times.
-ThDepth: 30.0
+ThDepth: 35.0
 
 #--------------------------------------------------------------------------------------------
 # ORB Parameters
