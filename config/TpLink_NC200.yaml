@@ -2,29 +2,30 @@
 
 #--------------------------------------------------------------------------------------------
 # Camera Parameters. Adjust them!
-# ActionCam Calibration 848 x 480
+# ActionCam Calibration 640 x 480
+# https://www.base64decode.org/
 #--------------------------------------------------------------------------------------------
-Camera.fx: 572.803458
-Camera.cx: 404.080455
-Camera.fy: 571.914611
-Camera.cy: 232.017696
+Camera.fx: 647.423126
+Camera.cx: 349.630077
+Camera.fy: 647.749021
+Camera.cy: 237.527206
 
-Camera.k1: -0.351212
-Camera.k2: 0.154898
-Camera.p1: -0.003178
-Camera.p2: -0.001337
+Camera.k1: -0.009218
+Camera.k2: -0.118034
+Camera.p1: 0.001072
+Camera.p2: 0.004207
 
-Camera.width: 848
+Camera.width: 640
 Camera.height: 480
 
 # Camera frames per second 
-Camera.fps: 30.0
+Camera.fps: 25.0
 
 # Color order of the images (0: BGR, 1: RGB. It is ignored if images are grayscale)
 Camera.RGB: 0
 
 # Close/Far threshold. Baseline times.
-ThDepth: 45.0
+ThDepth: 50.0
 
 #--------------------------------------------------------------------------------------------
 # ORB Parameters

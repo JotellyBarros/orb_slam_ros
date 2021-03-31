@@ -1,6 +1,6 @@
 <launch>
     <!-- load the orb_slam_ros -->
-    <node name="orb_slam_ros" pkg="orb_slam_ros" type="mono_node_KITTI" args="$(find orb_slam_ros)/config/ActionCam.yaml $(find orb_slam_ros)/Vocabulary/ORBvoc.bin" output="screen">
+    <node name="orb_slam_ros" pkg="orb_slam_ros" type="mono_node_KITTI" args="$(find orb_slam_ros)/config/TpLink_NC200.yaml $(find orb_slam_ros)/Vocabulary/ORBvoc.bin" output="screen">
         <remap from="/camera/image_raw" to="/camera/image_raw" />
 
         <param name="publish_pointcloud" type="bool" value="true" />
@@ -13,5 +13,12 @@
 
     <!-- load the rqt_console -->
     <!-- <node name="rqt_gui" pkg="rqt_gui" type="rqt_gui"/> -->
+
+
+    <!--Run the rviz display -->
+    <node type="rviz" name="rviz" pkg="rviz" args="-d $(find orb_slam_ros)/rviz/config_file.rviz" />
+
+    <!--Run the video_file topc -->
+	<!--<include file="$(find video_stream_opencv)/launch/video_file.launch"/>-->
 
 </launch>
